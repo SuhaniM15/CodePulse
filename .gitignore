@@ -182,6 +182,22 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
+# Dataset
+data/
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Environment variables
+.env
+
+# IDE
+.vscode/
 
 # PyCharm
 #   JetBrains specific template is maintained in a separate JetBrains.gitignore that can
