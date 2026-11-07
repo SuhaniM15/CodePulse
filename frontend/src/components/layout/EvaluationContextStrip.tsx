@@ -3,20 +3,10 @@ import { ErrorState } from '@/components/ErrorState';
 import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { useApi } from '@/hooks/useApi';
 import { useHealth } from '@/hooks/useHealth';
+import { formatDateRange } from '@/lib/format';
 import { mockEvaluationContext } from '@/mocks/evaluationContext.mock';
 
 const numberFormat = new Intl.NumberFormat('en-GB');
-
-function formatIsoDate(iso: string): string {
-  const date = new Date(`${iso}T00:00:00Z`);
-  if (Number.isNaN(date.getTime())) return iso;
-  return new Intl.DateTimeFormat('en-GB', {
-    day: 'numeric',
-    month: 'short',
-    year: 'numeric',
-    timeZone: 'UTC',
-  }).format(date);
-}
 
 function Field({ label, children }: { label: string; children: React.ReactNode }) {
   return (
@@ -76,7 +66,7 @@ export function EvaluationContextStrip() {
         <dl className="m-0 grid grid-cols-2 gap-x-6 gap-y-2 sm:grid-cols-3 xl:grid-cols-5">
           <Field label="Split name">{ctx.split_name}</Field>
           <Field label="Date range">
-            {formatIsoDate(ctx.date_range.start)} to {formatIsoDate(ctx.date_range.end)}
+            {formatDateRange(ctx.date_range)}
           </Field>
           <Field label="Commits">{numberFormat.format(ctx.total_commits)}</Field>
           <Field label="Buggy commits">{numberFormat.format(ctx.buggy_commits)}</Field>

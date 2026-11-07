@@ -1,36 +1,51 @@
 // SAMPLE FIXTURE. See flags.ts. Fake commit IDs; not real commits.
-import type { CommitsResponse, HistoricalCommit } from '../api/types';
+// mockCommitsFor imitates the proposed server behaviour (filter, sort,
+// paginate) so the Commit ranking page can be exercised in mock mode only.
+import type { CommitsQuery, CommitsResponse, HistoricalCommit, RiskBand } from '../api/types';
 import { mockEvaluationContext } from './evaluationContext.mock';
 import { MOCK_MODEL_VERSION } from './flags';
 
-const rows: Array<[string, string, number, 'buggy' | 'clean', 'low' | 'medium' | 'high' | null]> = [
-  ['sample-0001', 'project-a', 0.9, 'buggy', 'high'],
-  ['sample-0002', 'project-a', 0.8, 'buggy', 'high'],
-  ['sample-0003', 'project-b', 0.7, 'clean', 'medium'],
-  ['sample-0004', 'project-a', 0.6, 'clean', 'medium'],
-  ['sample-0005', 'project-b', 0.5, 'clean', null],
-  ['sample-0006', 'project-a', 0.4, 'buggy', null],
-  ['sample-0007', 'project-b', 0.3, 'clean', 'low'],
-  ['sample-0008', 'project-b', 0.2, 'clean', 'low'],
-];
+// The frontend has no band thresholds: real bands and their cut-offs come from
+// the API (types.ts A17). These cut-offs exist only so the sample rows are
+// self-consistent (a higher score never gets a lower band). They are sample
+// placeholders, not a proposal for the real thresholds.
+function sampleBand(score: number): RiskBand {
+  if (score >= 0.7) return 'high';
+  if (score >= 0.4) return 'medium';
+  return 'low';
+}
 
-const commits: HistoricalCommit[] = rows.map(
-  ([commit_id, project, risk_score, outcome, risk_band]) => ({
-    commit_id,
-    project,
+const ALL: HistoricalCommit[] = Array.from({ length: 30 }, (_, i) => {
+  const n = i + 1;
+  const risk_score = ((n * 7) % 10 + 1) / 10;
+  return {
+    commit_id: `sample-${String(n).padStart(4, '0')}`,
+    project: n % 3 === 0 ? 'project-b' : 'project-a',
     risk_score,
     score_type: 'relative_risk_score',
-    risk_band,
-    outcome,
+    // Every fourth row has no band, to exercise the "score only" case.
+    risk_band: n % 4 === 3 ? null : sampleBand(risk_score),
+    outcome: n % 5 === 0 ? 'buggy' : 'clean',
     model_version: MOCK_MODEL_VERSION,
-  }),
-);
+  };
+});
 
-export const mockCommits = {
-  commits,
-  total: commits.length,
-  page: 1,
-  page_size: 10,
-  available_projects: ['project-a', 'project-b'],
-  evaluation_context: mockEvaluationContext,
-} satisfies CommitsResponse;
+export function mockCommitsFor(query: CommitsQuery): CommitsResponse {
+  const filtered = query.project ? ALL.filter((c) => c.project === query.project) : ALL;
+  const dir = query.sort_dir === 'asc' ? 1 : -1;
+  const sorted = [...filtered].sort((a, b) => {
+    const av = a[query.sort_by];
+    const bv = b[query.sort_by];
+    const cmp = av < bv ? -1 : av > bv ? 1 : 0;
+    return cmp * dir || a.commit_id.localeCompare(b.commit_id);
+  });
+  const start = (query.page - 1) * query.page_size;
+  return {
+    commits: sorted.slice(start, start + query.page_size),
+    total: sorted.length,
+    page: query.page,
+    page_size: query.page_size,
+    available_projects: ['project-a', 'project-b'],
+    evaluation_context: mockEvaluationContext,
+  };
+}
