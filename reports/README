@@ -1,0 +1,13 @@
+# Reports and Reproducibility Outputs
+
+Store generated, versioned experiment outputs here. Do not handwrite results or split IDs.
+
+Expected outputs (create only when produced by code):
+- `split_config.json` — actual train/validation/test IDs or reproducible ID references, date boundaries, project coverage, class prevalence, seed and split rationale.
+- `model_metrics.json` — model version, features, split, metrics and prevalence.
+- `review_budget_pooled.csv` and `review_budget_by_project.csv`.
+- `cross_project_metrics.csv`.
+- `calibration_metrics.json` and calibration plot, only if probability output is supported.
+- `predictions.csv` — commit identifier, true label where available, score/probability type and model version.
+
+Every output should identify the dataset subset, split type, code/model version and generation date. Do not commit raw data or credentials.
