@@ -1,0 +1,54 @@
+@import '@fontsource/instrument-sans/400.css';
+@import '@fontsource/instrument-sans/500.css';
+@import '@fontsource/instrument-sans/600.css';
+@import '@fontsource/instrument-sans/700.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import './theme/tokens.css';
+
+@import "tailwindcss";
+
+/* ── Base reset ───────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+body {
+  margin: 0;
+  background-color: var(--cp-canvas);
+  color: var(--cp-ink);
+  font-family: var(--cp-font-ui);
+  font-size: 1rem;
+  line-height: 1.6;
+}
+
+/* ── Focus ring ───────────────────────────────────────── */
+:focus-visible {
+  outline: 2px solid var(--cp-focus);
+  outline-offset: 3px;
+}
+
+/* ── Monospace identifiers ────────────────────────────── */
+.font-mono {
+  font-family: var(--cp-font-mono);
+  font-size: 0.8125rem;
+}
+
+/* ── Tabular numerals for metrics ─────────────────────── */
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Reduced motion ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
