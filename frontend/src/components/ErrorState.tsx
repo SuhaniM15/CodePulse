@@ -33,6 +33,16 @@ export function ErrorState({ error, onRetry, title, className }: ErrorStateProps
       <div className="min-w-0 flex-1">
         <p className="font-semibold">{title ? `${title} could not be loaded` : 'Request failed'}</p>
         <p className="mt-0.5 break-words">{error.message}</p>
+        {error.field_errors && error.field_errors.length > 0 ? (
+          <ul className="mt-1 list-disc pl-5">
+            {error.field_errors.map((fe, i) => (
+              <li key={`${fe.field}-${i}`}>
+                {fe.field ? <span className="font-medium">{fe.field}: </span> : null}
+                {fe.message}
+              </li>
+            ))}
+          </ul>
+        ) : null}
         {error.detail ? (
           <p className="mt-0.5 break-words text-muted-foreground">{error.detail}</p>
         ) : null}

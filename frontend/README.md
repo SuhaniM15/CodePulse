@@ -36,6 +36,7 @@ Restart `pnpm dev` after changing `.env`.
 |---|---|
 | `VITE_API_BASE_URL` | Base URL of the FastAPI backend, for example `http://localhost:8000`. There is no default. If it is unset and mock mode is off, pages show a configuration error. |
 | `VITE_USE_MOCK` | `true` shows clearly labelled sample fixtures instead of calling the API. Any other value, or unset, means the real API. |
+| `VITE_MOCK_PROVISIONAL` | Mock mode only. `true` makes the fixtures report a provisional model so the "Provisional model" notice shows. |
 
 Mock mode is the only way fixtures are used. If the API fails with mock mode off, the page shows the API's own error message and a retry action. It never falls back to fixtures. While mock mode is on, every page that shows a fixture displays a non-dismissible "Sample data" notice.
 

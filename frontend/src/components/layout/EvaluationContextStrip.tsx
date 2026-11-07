@@ -1,6 +1,8 @@
 import type { EvaluationContext } from '@/api/types';
 import { ErrorState } from '@/components/ErrorState';
+import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { useApi } from '@/hooks/useApi';
+import { useHealth } from '@/hooks/useHealth';
 import { mockEvaluationContext } from '@/mocks/evaluationContext.mock';
 
 const numberFormat = new Intl.NumberFormat('en-GB');
@@ -45,6 +47,7 @@ export function EvaluationContextStrip() {
   const { state, reload } = useApi<EvaluationContext>('/evaluation-context', {
     mock: mockEvaluationContext,
   });
+  const health = useHealth();
 
   if (state.status === 'loading') {
     return (
@@ -79,6 +82,23 @@ export function EvaluationContextStrip() {
           <Field label="Buggy commits">{numberFormat.format(ctx.buggy_commits)}</Field>
           <Field label="Model version">{ctx.model_version ?? 'Not available'}</Field>
         </dl>
+        {health.state.status === 'success' ? (
+          <ProvisionalNotice
+            status={health.state.data.model_status}
+            className="mt-1"
+          >
+            The model is provisional. Scores and metrics in this interface are for
+            integration and are not final results.
+          </ProvisionalNotice>
+        ) : null}
+        {health.state.status === 'error' ? (
+          <p className="m-0 text-sm text-muted-foreground">
+            Model status could not be checked: {health.state.error.message}{' '}
+            <button type="button" className="underline underline-offset-2" onClick={health.reload}>
+              Try again
+            </button>
+          </p>
+        ) : null}
       </div>
     </StripFrame>
   );

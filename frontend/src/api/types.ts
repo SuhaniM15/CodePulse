@@ -71,6 +71,11 @@
 //  Model status
 //  A19. `model_status` ("provisional" | "final") is present on /health,
 //       /predict and each /metrics entry. "Provisional" shows a banner.
+//  A20. The strip and pages read the provisional banner from GET /health.
+//
+//  Units
+//  A21. Rates are fractions from 0 to 1 (capture_rate, buggy_rate). Curve
+//       points are percent from 0 to 100 (A10). The UI converts for display.
 // ─────────────────────────────────────────────────────────────────────────────
 
 // ── Shared / meta ─────────────────────────────────────────────────────────────
