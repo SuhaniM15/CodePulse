@@ -1,54 +1,143 @@
-@import '@fontsource/instrument-sans/400.css';
-@import '@fontsource/instrument-sans/500.css';
-@import '@fontsource/instrument-sans/600.css';
-@import '@fontsource/instrument-sans/700.css';
-@import '@fontsource/jetbrains-mono/400.css';
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+@import '@fontsource/instrument-sans/latin-400.css';
+@import '@fontsource/instrument-sans/latin-500.css';
+@import '@fontsource/instrument-sans/latin-600.css';
+@import '@fontsource/instrument-sans/latin-700.css';
+@import '@fontsource/jetbrains-mono/latin-400.css';
 @import './theme/tokens.css';
 
-@import "tailwindcss";
+@custom-variant dark (&:is(.dark *));
 
-/* ── Base reset ───────────────────────────────────────── */
-*, *::before, *::after {
-  box-sizing: border-box;
+/*
+ * shadcn/ui semantic variables, mapped onto the CodePulse tokens.
+ * Colours are defined once in theme/tokens.css; do not add new hex values here.
+ */
+:root {
+  --background: var(--cp-canvas);
+  --foreground: var(--cp-ink);
+  --card: var(--cp-surface);
+  --card-foreground: var(--cp-ink);
+  --popover: var(--cp-surface);
+  --popover-foreground: var(--cp-ink);
+  --primary: var(--cp-model);
+  --primary-foreground: var(--cp-surface);
+  --secondary: var(--cp-canvas);
+  --secondary-foreground: var(--cp-ink);
+  --muted: var(--cp-canvas);
+  --muted-foreground: var(--cp-muted);
+  --accent: var(--cp-canvas);
+  --accent-foreground: var(--cp-ink);
+  --destructive: var(--cp-risk-high);
+  --border: var(--cp-border);
+  --input: var(--cp-border);
+  --ring: var(--cp-focus);
 }
 
-html {
-  font-size: 16px;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@theme inline {
+  --font-sans: 'Instrument Sans', system-ui, sans-serif;
+  --font-heading: var(--font-sans);
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* CodePulse palette as Tailwind colours */
+  --color-canvas: var(--cp-canvas);
+  --color-surface: var(--cp-surface);
+  --color-ink: var(--cp-ink);
+  --color-model: var(--cp-model);
+  --color-baseline: var(--cp-baseline);
+  --color-change-size: var(--cp-change-size);
+  --color-risk-low: var(--cp-risk-low);
+  --color-risk-medium: var(--cp-risk-medium);
+  --color-risk-high: var(--cp-risk-high);
+
+  /* Radii: sm = risk chips, md = inputs and buttons, lg = panels, xl = dialogs.
+     Tables use no radius (do not add rounded-* to tables). */
+  --radius-sm: var(--cp-radius-chip);
+  --radius-md: var(--cp-radius-control);
+  --radius-lg: var(--cp-radius-panel);
+  --radius-xl: var(--cp-radius-dialog);
+
+  /* Built-in Tailwind shadows are disabled. Only the two utilities below exist. */
+  --shadow-2xs: none;
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+  --shadow-2xl: none;
 }
 
-body {
-  margin: 0;
-  background-color: var(--cp-canvas);
-  color: var(--cp-ink);
-  font-family: var(--cp-font-ui);
-  font-size: 1rem;
-  line-height: 1.6;
+/* The only two permitted shadows: the evaluation-context strip and dialogs. */
+@utility shadow-strip {
+  box-shadow: var(--cp-shadow-sm);
 }
 
-/* ── Focus ring ───────────────────────────────────────── */
+@utility shadow-dialog {
+  box-shadow: var(--cp-shadow-md);
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html {
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--cp-canvas);
+    color: var(--cp-ink);
+    font-family: var(--cp-font-ui);
+    font-size: 1rem;
+    line-height: 1.6;
+  }
+}
+
+/* Visible keyboard focus everywhere. Intentionally unlayered so it always wins. */
 :focus-visible {
   outline: 2px solid var(--cp-focus);
-  outline-offset: 3px;
+  outline-offset: 2px;
 }
 
-/* ── Monospace identifiers ────────────────────────────── */
-.font-mono {
+/* JetBrains Mono is for commit IDs only. */
+.commit-id {
   font-family: var(--cp-font-mono);
   font-size: 0.8125rem;
+  font-variant-numeric: normal;
+  letter-spacing: 0;
 }
 
-/* ── Tabular numerals for metrics ─────────────────────── */
-.tabular-nums {
-  font-variant-numeric: tabular-nums;
-}
+/* Tabular numerals come from Tailwind's built-in `tabular-nums` utility. */
 
-/* ── Reduced motion ───────────────────────────────────── */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
