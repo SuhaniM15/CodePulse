@@ -1,95 +1,56 @@
-# Feature Requirements
+# Feature and Application Requirements
+
+## Architecture
+React frontend → FastAPI backend → preprocessing + saved ML model → structured response → frontend visualisation.
+
+Final UI results must come from actual outputs. Mock data is allowed during early UI development only and must be replaced before review.
+
+## Pages
+1. **Overview:** purpose, limitations, model status, sourced summary metrics.
+2. **Commit Analysis:** approved metric inputs, validation, risk score and supported explanation. Show probability only if calibrated.
+3. **Review Budget (highest priority):** top 10/20/30%; buggy commits captured and capture rate; model vs random vs change-size; pooled and per-project views; denominator, sample size, rounding and tie policy.
+4. **Model Performance:** PR-AUC, ROC-AUC, precision, recall, F1, MCC where applicable; Brier/calibration plot if probabilities; prevalence and split type.
+5. **Explainability:** global importance and example explanation where supported; association is not causation.
+6. **Historical Evaluation:** ranked commits from labelled offline data; do not imply live GitHub analysis.
 
 ## Priority
-- **P0:** Must work for the final demonstration.
-- **P1:** Important polish if time permits.
-- **P2:** Optional; only after P0 is stable.
+**P0:** health check, validated prediction endpoint, actual model loading/inference, Review Budget page with real results, Model Performance page, correct score/probability wording, error handling and end-to-end test.
 
-## P0 – Must-have
+**P1:** commit explanation, pooled/per-project filter, historical ranking, calibration visualisation.
 
-### Overview dashboard
-- Project introduction and intended-use note.
-- Dataset size and target distribution.
-- Selected model and metrics loaded from actual experiment outputs.
-- Clearly state which evaluation split produced the metrics.
+**P2 (cut first):** CSV download, extra filters, confusion matrix, separate model-card page, decorative polish. Do not cut Review Budget.
 
-### Commit risk prediction
-- Form accepts the final approved model features only.
-- Validate required fields and numeric ranges.
-- Backend loads the saved fitted preprocessing-plus-model pipeline.
-- Display predicted class and estimated probability/risk.
-- State that the score is an estimate, not certainty.
-- Handle missing model files and invalid input gracefully.
+## API contract by Nov 8
+Agree prediction request/response, model metrics, pooled review-budget, per-project evaluation and explainability schemas. Specify field names, types, required fields and examples.
 
-### Risk explanation
-- Show influential features using a method compatible with the selected model.
-- Do not imply feature importance proves causation.
-- If only global explanation is implemented, label it as global.
+### Illustrative request only
+```json
+{
+  "la": 12, "ld": 4, "nf": 2, "nd": 1, "ns": 1,
+  "ent": 0.7, "ndev": 3, "age": 14, "nuc": 8,
+  "aexp": 20, "arexp": 12, "asexp": 9
+}
+```
 
-### Historical commit prioritisation
-- Load a prepared evaluation/demo dataset with actual model predictions.
-- Allow project filtering where feasible.
-- Rank commits by predicted risk.
-- Show commit ID, project, and risk score.
-- In retrospective evaluation views, actual labels may be shown clearly as historical ground truth.
-- Do not imply historical replay is live GitHub analysis.
+### Illustrative response only — values are placeholders
+```json
+{
+  "model_status": "provisional",
+  "score_type": "relative_risk_score",
+  "risk_score": 0.73,
+  "probability": null,
+  "explanation": [{"feature": "la", "direction": "increases_score"}],
+  "notice": "Decision support only; inspect and test the code change."
+}
+```
+Never present placeholder values as project results. A probability field may be populated only when calibration is supported by suitable validation evidence.
 
-### Review-budget analysis
-- Show top 10%, 20%, and 30% review-budget results.
-- Show commits reviewed and actual buggy commits captured.
-- Compare with random and change-size baselines.
-- Show evaluation-set size and total buggy commits.
-- Load computed experiment outputs; do not hardcode results.
+## Suggested report files
+- `model_metrics.json`
+- `review_budget_pooled.csv`
+- `review_budget_by_project.csv`
+- `cross_project_metrics.csv`
+- `calibration_metrics.json`
+- `predictions.csv`
 
-### Model comparison
-- Compare candidate models on the same held-out split.
-- Display PR-AUC, ROC-AUC, precision, recall, F1, and MCC where defined.
-- State how the classification threshold was selected.
-- Explain final model selection briefly.
-
-## P1 – Should-have
-- Project and risk filters.
-- Confusion matrix.
-- Dataset and project charts.
-- Download ranked commits as CSV.
-- Helpful empty states and errors.
-- Model limitations/model card page.
-
-## P2 – Optional
-- Multiple split comparison.
-- Confidence intervals.
-- LOC-weighted review-effort approximation.
-- Advanced local explanations.
-- External dataset evaluation.
-- Label-noise robustness experiment.
-
-## UI and API requirements
-- Build a dedicated React web frontend; do not use Streamlit as the application UI.
-- Use a Python FastAPI backend to expose prediction and experiment-result endpoints.
-- Frontend and backend must communicate through documented request/response schemas.
-- Frontend can be developed with temporary, clearly labelled mock data, but all demo results must be replaced by genuine outputs.
-- UI must handle loading, empty, validation-error, and API-error states.
-- Keep design polished and consistent, but prioritise usability and truthful data over decorative complexity.
-- The project may use any suitable AI-assisted coding tool; no specific tool is required.
-
-## Non-functional requirements
-- Document actual launch commands once implementation exists.
-- No raw data or secrets committed.
-- Validated inputs.
-- Compatible model and preprocessing artefacts.
-- No fake fallback scores if model files are missing.
-- Charts have titles, labels, and evaluation context.
-- Usable on a typical laptop screen.
-
-## Acceptance checklist
-- [ ] App launches from a clean environment.
-- [ ] Prediction uses the saved fitted pipeline through the API.
-- [ ] Invalid input is handled.
-- [ ] Risk score is labelled as an estimate.
-- [ ] Explanation is derived from actual model information.
-- [ ] Historical commits can be ranked using real model scores.
-- [ ] Review-budget results are computed from experiments.
-- [ ] Baselines use the same evaluation set.
-- [ ] Model comparison uses consistent splits.
-- [ ] No target, identifier, or prohibited leakage column enters predictors.
-- [ ] No fabricated results are displayed.
+Include model version, dataset subset, split type and evaluation metadata.

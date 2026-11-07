@@ -1,53 +1,103 @@
 # CodePulse Task Tracker
+**Review/submission:** Nov 19, 2026 · **Code freeze:** Nov 18, 2026
 
-Use this as the shared task register. Replace Member 1–5 with names and update status in the GitHub Issues/Project board. Suggested statuses: `Not started`, `In progress`, `Blocked`, `In review`, `Done`.
+Status values: Not started / In progress / Blocked / Done.
 
-## Ownership and tasks
+| Due | Task | Owner | Acceptance condition |
+|---|---|---|---|
+| Nov 7 | Review EDA and approve provisional data/features | Member 1 + Harsh | Decisions supported by saved evidence |
+| Nov 7 | Validate data and investigate split relationships | Harsh | Counts, IDs, class rates, dates/projects |
+| Nov 7 | Training/baseline framework | Tanushri | Reproducible scripts |
+| Nov 7 | Literature and review-budget definition | Gitte | Sources and calculation definition |
+| Nov 7 | FastAPI skeleton/health endpoint | Chaudhari | Runs locally |
+| Nov 8 | API schema agreed | Member 1 + Chaudhari | Fields/types documented |
+| Nov 8 | Sample request/response and report formats | Chaudhari + owners | JSON/CSV examples shared |
+| Nov 8 | Investigate unassigned ApacheJIT records | Harsh | Verify IDs, dates, projects and labels |
+| Nov 9–10 | Provisional model pipeline artefact | Tanushri | Loads/predicts; labelled provisional |
+| Nov 9–10 | Early frontend/backend integration | Member 1 + Chaudhari | Frontend calls API |
+| Nov 11–12 | Model comparison/calibration | Tanushri | Validation-only choices; Brier/plot if probability |
+| Nov 11–12 | Random vs chronological evaluation | Harsh + Tanushri | Split manifests and metrics |
+| Nov 12 | Deployment/local-demo decision | Member 1 + Chaudhari | Feasibility checked; fallback agreed |
+| Nov 13–14 | Pooled/per-project review-budget results | Gitte | Top 10/20/30 and baselines; ties/denominator defined |
+| Nov 13–14 | Cross-project and Hadoop sensitivity | Harsh | Fold eligibility and with/without Hadoop |
+| Nov 13–14 | Explainability/error analysis | Gitte + Chaudhari | Method and output coordinated |
+| Nov 13–14 | Report skeleton | Gitte | Sections drafted |
+| Nov 15–16 | Full integration and end-to-end tests | All relevant owners | Real model and results connected |
+| Nov 17 | Final report, README and presentation | Gitte + all | Numbers match reproducible outputs |
+| Nov 18 | Code freeze and rehearsal | All | Backup demo ready |
+| Nov 19 | Review/submission | All | Deliverables ready |
 
-| ID | Owner | Task | Dependency | Expected output | Initial status |
-|---|---|---|---|---|---|
-| CP-01 | Member 1 | Complete EDA decisions and confirm candidate feature list | Existing EDA; verify paper definitions | EDA/data-decision note | In progress |
-| CP-02 | Member 1 | Coordinate methodology, interfaces and team check-ins | None | Approved shared contracts | Not started |
-| CP-03 | Member 1 | Set up React + Vite frontend shell and design system | None | Running frontend shell | Not started |
-| CP-04 | Member 1 | Build dashboard, commit analysis, risk ranking and results pages | CP-03; API/data contracts | Frontend pages | Not started |
-| CP-05 | Member 1 + Member 5 | Integrate frontend with FastAPI | CP-04, CP-10 | End-to-end UI/API flow | Not started |
-| CP-06 | Member 2 | Build dataset loading and validation | None for scaffolding | Validation script/report | Not started |
-| CP-07 | Member 2 | Implement approved feature selection and preprocessing | CP-01 | Reusable preprocessing module | Not started |
-| CP-08 | Member 2 | Implement temporal/project split utilities and leakage tests | CP-01, CP-07 | Reproducible split outputs/tests | Not started |
-| CP-09 | Member 3 | Implement baseline and candidate model training | CP-07, CP-08 for final runs | Training pipeline | Not started |
-| CP-10 | Member 3 | Compare models, select validation threshold and save artefacts | CP-09 | Model artefact and metrics/predictions | Not started |
-| CP-11 | Member 4 | Prepare literature review and evaluation protocol | None | Cited related-work notes | Not started |
-| CP-12 | Member 4 | Implement review-budget and ranking baselines | Evaluation contract; can prototype now | Review-budget results from real predictions | Not started |
-| CP-13 | Member 4 | Implement cross-project evaluation | Split/data contract | Cross-project results | Not started |
-| CP-14 | Member 4 | Implement explainability and error analysis | CP-10 | Explanation outputs and error notes | Not started |
-| CP-15 | Member 5 | Set up FastAPI, health check and schemas | None | Running API skeleton | Not started |
-| CP-16 | Member 5 | Implement real prediction endpoint and tests | CP-07, CP-10 | Working prediction API | Not started |
-| CP-17 | All, coordinated by Member 1 | End-to-end testing and final fixes | Core tasks integrated | Test evidence and fixed demo | Not started |
-| CP-18 | All, coordinated by Member 1 | Report, README, model card and presentation | Actual results available | Final documentation/presentation | Not started |
+## Immediate checklist
 
-## Parallel work that can start immediately
-- Member 1: EDA decisions and React shell.
-- Member 2: generic data validation/loading scaffolding.
-- Member 3: model-training skeleton, baseline definitions and experiment configuration; do not report provisional metrics as final.
-- Member 4: literature review and review-budget calculation using clearly labelled sample predictions.
-- Member 5: FastAPI health endpoint, schemas and API skeleton.
+### Member 1
+- [ ] Verify feature definitions against ApacheJIT paper.
+- [ ] Approve predictor/exclusion decisions.
+- [ ] Start React shell and Review Budget layout.
+- [ ] Agree API contract with Chaudhari.
 
-## Key dependency chain
-1. Member 1 approves feature/data decisions.
-2. Member 2 finalises preprocessing and split outputs.
-3. Member 3 trains and evaluates candidate models, then saves compatible artefacts.
-4. Member 4 completes model-dependent comparisons, explainability and error analysis; some evaluation scaffolding can happen earlier.
-5. Member 5 connects the real prediction pipeline to the API once artefacts are ready.
-6. Member 1 integrates the API into the React frontend and leads end-to-end validation.
+### Harsh
+- [ ] Save evidence for counts, class rates, date overlap and `test_small` subset.
+- [ ] Verify candidate unassigned records by commit ID.
+- [ ] Investigate Hadoop without changing raw labels.
+- [ ] Build validation/preprocessing/split utilities.
+- [ ] Run cross-project and Hadoop sensitivity evaluation.
 
-This is not fully sequential: frontend pages, API scaffolding, validation scaffolding, literature review, and evaluation utilities can be developed in parallel using agreed contracts.
+### Tanushri
+- [ ] Build baseline framework.
+- [ ] Implement `la`-only Logistic Regression.
+- [ ] Train candidate models.
+- [ ] Investigate natural-rate calibration set.
+- [ ] Export provisional artefact by Nov 9–10.
+- [ ] Report Brier/calibration plot if probabilities are used.
 
-## Daily stand-up
-Each member posts:
-1. Completed yesterday/today:
-2. Next task:
-3. Blocker/dependency:
-4. Issue/branch/PR link:
+### Gitte
+- [ ] Literature review.
+- [ ] Define denominator, rounding and tie policy.
+- [ ] Pooled and per-project top-10/20/30 results.
+- [ ] Compare model, random and change-size ranking.
+- [ ] Start report skeleton Nov 13–14.
 
-## Completion rule
-A task is not `Done` merely because code was written. It must run, have appropriate tests or verification, produce genuine outputs, be committed on a branch, and be reviewed/merged.
+### Chaudhari
+- [ ] FastAPI skeleton and health endpoint.
+- [ ] API schema by Nov 8.
+- [ ] Sample response/report shapes by Nov 8.
+- [ ] Provisional model integration Nov 9–10.
+- [ ] Explainability support with Gitte.
+- [ ] Deployment and local fallback with Member 1.
+
+## Definition of done
+A task is done when its code/document exists, has been run or checked, outputs are reproducible or evidence recorded, limitations documented, owner can explain it, and relevant PR is reviewed/merged.
+
+
+## Milestone freeze dates and integration rules
+
+| Freeze | Date | Meaning |
+|---|---|---|
+| Split freeze | Nov 9 | Dataset partitions, IDs, date boundaries and split metadata are fixed and versioned. |
+| Model freeze | Nov 11 | Select the model and export the versioned final artefact. |
+| Feature freeze | Nov 14 | No new user-facing features after this date; only fixes and stability work. |
+| Code freeze | Nov 18 | No feature work; final rehearsal and critical fixes only. |
+
+Use a provisional model/artefact for early integration if needed. Label it clearly as provisional; never use provisional results as final report results. The final API and frontend must use the final saved artefact and real evaluation outputs.
+
+## Definition of Done
+
+A task is complete only when:
+- its output exists in the agreed repository location;
+- it runs from the documented environment/commands;
+- relevant tests or manual verification have passed;
+- results are real and reproducible, not invented or left as unlabeled mock data;
+- the PR has been reviewed and merged;
+- the author can explain the implementation and its limitations.
+
+## Daily team update
+
+Each member posts: (1) completed since last update, (2) next task, (3) blocker/dependency, and (4) relevant issue, files or PR link.
+
+## Dependency order
+
+Member 2's validated data and frozen split → Member 3's final model → Member 4's final review-budget evaluation and Member 5's final prediction/explainability API → Member 1's end-to-end integration. Start interface work earlier with agreed schemas and clearly marked provisional fixtures.
+
+## Scope cuts if the schedule slips
+
+Cut in this order: external dataset work; label-noise experiments; CSV export/extra filters/confusion-matrix extras; separate model-card page (retain a concise model card in the docs). Preserve the core baselines, chronological evaluation, calibration decision/relative-risk wording, review-budget experiment, leakage checks and random-versus-chronological comparison.

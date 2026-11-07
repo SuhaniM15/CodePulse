@@ -1,94 +1,73 @@
 # Technical Methodology
 
-This is the planned experimental design. Items requiring verification must be recorded before results are reported.
+## 1. Target and candidate features
+`buggy` is the target label. Candidate numeric predictors are `la`, `ld`, `nf`, `nd`, `ns`, `ent`, `ndev`, `age`, `nuc`, `aexp`, `arexp`, `asexp`. Verify their exact definitions against the ApacheJIT paper before approving the final feature dictionary; do not infer definitions from names alone.
 
-## 1. Dataset and target
-Primary source: ApacheJIT. Target: `buggy`; positive class: `True`.
-
-| File | Rows |
-|---|---:|
-| apachejit_total.csv | 106,674 |
-| apachejit_train.csv | 44,834 |
-| apachejit_test_large.csv | 30,111 |
-| apachejit_test_small.csv | 7,526 |
-
-`test_small` is a subset of `test_large`; do not treat them as independent evaluations.
-
-## 2. Column roles
-
-| Column(s) | Planned role |
+| Column | Role |
 |---|---|
-| `buggy` | Target; never a predictor |
-| `commit_id` | Identifier; exclude from predictors |
-| `project` | Grouping and project-wise analysis |
-| `year`, `author_date` | Temporal analysis and splitting |
-| `fix` | Exclude from predictors; possible target proxy. Exact semantics need verification |
-| `la`, `ld`, `nf`, `nd`, `ns`, `ent`, `ndev`, `age`, `nuc`, `aexp`, `arexp`, `asexp` | Candidate predictors; verify definitions and ranges |
+| `buggy` | Target only |
+| `commit_id` | Traceability identifier, not predictor |
+| `project` | Grouping for per-project/cross-project evaluation |
+| `author_date`, `year` | Temporal analysis and splitting |
+| `fix` | Excluded pending verification of meaning and prediction-time availability |
+| Twelve numeric metrics | Candidate predictors, subject to verification |
 
-## 3. Known data observations
-- Initial inspection found no missing values in the four CSV files.
-- Supplied training data is approximately balanced; supplied test files have a buggy rate around 19%.
-- `test_small` is contained in `test_large`.
-- Although the supplied split is described as a later-period test set, per-project date checks show overlap for some projects. Do not call it strictly future-only for every project.
-- `apache/hadoop` has 11,964 inspected rows and zero `buggy=True` labels. This is unresolved. Preserve raw data and, if feasible, compare results with and without this project.
+## 2. Required data validation
+Check shapes, columns, types, missing values, duplicate IDs, ranges, class rates by project/year, date coverage, project coverage and ID overlap among all files. Verify whether `test_small` is contained in `test_large`. Identify records in `total` not present in supplied train or large test using IDs, not arithmetic alone. Save notebook/script output as evidence.
 
-## 4. Preprocessing principles
-1. Keep raw data unchanged.
-2. Implement reusable preprocessing in `src/`, not only in notebooks.
-3. Validate required columns, types, target values, duplicate identifiers, and numeric ranges.
-4. Fit imputers, scalers, encoders, and learned transformations on training data only.
-5. Apply fitted transformations unchanged to validation and test sets.
-6. Check candidate features for negative values before applying `log1p`.
-7. Tree models do not normally require scaling.
-8. For Logistic Regression, consider `log1p` for verified non-negative skewed features and `StandardScaler`; decide using validation data.
-9. Keep one approved ordered feature list shared by training and inference.
+## 3. Hadoop anomaly
+Current inspection found `apache/hadoop` has no `buggy=True` labels. This is an observed anomaly, not proof that labels are wrong. Preserve raw rows; investigate documentation; compare results with all projects versus excluding `apache/hadoop`. In a held-out project with no positive labels, positive-class recall and PR-AUC are not meaningfully evaluable; mark them N/A and explain why. Do not silently discard Hadoop.
 
-## 5. Splitting and leakage prevention
-Preferred evaluation: chronological train, validation, and untouched test periods. Select cutoffs after inspecting actual dates.
+## 4. Evaluation splits
+- **Supplied split:** reproduce as a benchmark. Do not call it strictly chronological for every project because per-project date checks showed overlap.
+- **Random split:** create reproducible partitions with no commit appearing in multiple partitions.
+- **Chronological split:** train on earlier commits and evaluate on later commits. Choose cutoffs only after inspecting project/date distributions. Keep the final test period untouched.
+- **Candidate natural-rate validation pool:** inspect records in `total` outside supplied train/test. Verify IDs, dates, project coverage and labels before using. Do not use future records to validate a model intended to predict those same future records.
+- **Label-availability gap (embargo):** because a commit's `buggy` label is established through later bug-fixing evidence, investigate when that label would realistically become knowable. If a gap is needed between training/validation/test periods, justify its length from the dataset's label-construction process and observed timing. Do not choose an arbitrary gap or assume the label is available immediately at commit time.
 
-Also consider leave-one-project-out evaluation: train on 14 projects and test on the held-out project, repeating where class composition allows meaningful metrics.
+Report split dates, row counts, projects and buggy rates.
 
-The supplied split can be reported as a benchmark, but describe its limitations accurately.
+## 5. Preprocessing and leakage
+Split before fitting learned preprocessing. Fit scalers, imputers, transformations and feature selection on training data only. Apply fitted transforms to validation/test without refitting. Ensure `buggy`, `commit_id`, `fix`, and default grouping/temporal columns are excluded from predictors. Check non-negative values before `log1p`. Scaling is relevant for Logistic Regression; tree models generally do not need standardisation.
 
-Never use `buggy`, `fix`, identifiers, or other prohibited fields as predictors. Never fit preprocessing on the full dataset before splitting. Never tune thresholds or hyperparameters on the final test set.
+For the random-versus-chronological comparison, use the same model family, feature set, evaluation metrics and comparable training-set sizes. Describe differences in split design and prevalence so the comparison is not overstated.
 
-## 6. Candidate models
-1. Logistic Regression, potentially with class weighting.
-2. Random Forest; candidate configuration: 300 trees and balanced class weights.
-3. Gradient Boosting using a suitable scikit-learn implementation.
+## 6. Models and baselines
+Required:
+1. Majority/always-clean baseline.
+2. Random ranking baseline for review-budget comparison.
+3. Change-size ranking baseline (document exact formula).
+4. Logistic Regression using `la` alone.
+5. Full-feature Logistic Regression.
+6. Random Forest.
+7. Gradient Boosting model.
 
-Use the same split and feature definitions for all models. Record seeds and hyperparameters.
+Handle class imbalance within training only. Do not rebalance validation/test data.
 
-## 7. Baselines
-- Majority-class prediction.
-- Random ranking.
-- Change-size ranking, using a documented metric such as `la` or a defined combined change-size measure.
+## 7. Calibration and probabilities
+The supplied training file is roughly balanced while the supplied large test file has a lower buggy rate. A model trained on a balanced sample may rank commits usefully but output probabilities that do not reflect natural prevalence.
 
-Evaluate baselines on exactly the same held-out commits as the model.
+Investigate a representative natural-rate validation set. Fit the calibrator using a dedicated calibration portion of validation data (or a properly cross-validated calibration procedure). Use validation data for model/threshold choices without leaking final-test information. Keep the final test untouched and use it only for final Brier score and calibration assessment. State class prevalence. Do not fit and claim to independently evaluate calibration on the same observations. If a suitable calibration set cannot be established, call the output a **relative risk score**, not a calibrated probability. Ranking quality and probability accuracy are different.
 
 ## 8. Metrics
-Report PR-AUC/average precision (state which implementation), ROC-AUC, precision, recall, F1 at a validation-selected threshold, MCC, and confusion matrix. Consider Brier score/calibration if probability quality is shown in the app.
-
-PR-AUC is important because buggy commits are a minority in the realistic test distribution. Accuracy alone is insufficient.
+Report PR-AUC, ROC-AUC, precision, recall, F1 at a validation-selected threshold, and MCC where applicable. Report prevalence. Report Brier score and calibration plot if probability output is enabled. Accuracy alone is insufficient for imbalanced data.
 
 ## 9. Review-budget experiment
-For each held-out set:
-1. Score every commit.
-2. Sort by predicted risk, highest first.
-3. Select the top 10%, 20%, and 30%.
-4. Calculate the fraction of all actual buggy commits captured.
-5. Compare CodePulse with random and change-size ranking.
-6. State denominator and tie-handling method.
+For each evaluation set:
+- Rank commits highest risk first.
+- Evaluate top 10%, 20%, 30%.
+- Capture rate = buggy commits selected in top-k / all buggy commits in evaluation set.
+- Compare model, random and change-size ranking.
+- Specify rounding for fractional budget counts and deterministic tie handling (e.g. stable commit-ID ordering after equal scores).
+- Report pooled and per-project results.
+- For projects with no positives, mark positive-class capture as N/A.
+Optional effort-aware evaluation may use lines changed as a proxy for effort; call it a proxy, not actual developer time.
 
-Use real predictions and labels. If using LOC-weighted effort, label LOC as an approximate proxy for review effort.
+## 10. Cross-project evaluation
+Use leave-one-project-out where feasible: train on other projects and test on the held-out project. Report project sample size and positive prevalence. A project with no positives cannot provide meaningful positive-class PR-AUC/recall.
 
-## 10. Explainability and error analysis
-Use permutation importance or a compatible feature-attribution method. Explain that importance is not causation. Inspect representative false positives and false negatives where time permits.
+## 11. Explainability and uncertainty
+Use a supported method such as permutation importance or a suitable SHAP method if feasible. Importance indicates model association, not causation. Inspect false positives/negatives. Fix random seeds and report seed variation. Row-level bootstrap ignores dependence among commits from the same project; state this limitation if used.
 
-## 11. Reliability and optional work
-If feasible, report bootstrap confidence intervals and repeat stochastic models across seeds. Note that row-level bootstrap does not account for dependence among commits from the same project.
-
-Optional only after core completion: Hadoop sensitivity analysis, training-label noise experiment (never alter test labels), external Qt/OpenStack evaluation after compatibility verification, and advanced explainability.
-
-## 12. Reproducibility
-Record Python/library versions, data files, split strategy and cutoffs, features, preprocessing, hyperparameters, random seeds, metrics, and model artefact version. Every reported number must be reproducible.
+## 12. External dataset gate
+Qt/OpenStack is optional. Verify commit-level unit, compatible label meaning, feature definitions and availability, transformations, and split design. If not quickly verified, do not implement external evaluation or merge it. ReDef function-level data is not directly interchangeable with ApacheJIT commits.

@@ -1,67 +1,72 @@
 # CodePulse
-## Intelligent Software Change Risk Prediction and Code Review Prioritisation Using Machine Learning
+**Intelligent Software Change Risk Prediction and Code Review Prioritisation Using Machine Learning**
 
-CodePulse is a software-engineering decision-support application that uses historical commit-level metrics to estimate whether a commit is likely to be defect-inducing and to prioritise commits for review.
+CodePulse estimates the risk associated with software commits and helps developers prioritise code review and testing. It is decision support only; it does not replace human review, tests, static analysis or developer judgement.
 
-Its central research question is:
+## Research question
+Can machine-learning-based commit risk prediction improve review prioritisation compared with random ranking and simple change-size strategies when review time is limited?
 
-> Can machine-learning-based commit risk prediction improve code-review prioritisation compared with simple strategies, particularly when review resources are limited?
+## Core demonstration
+Rank labelled commits by predicted risk. Imagine a reviewer can inspect only the top 10%, 20% or 30%. Measure what fraction of all buggy commits is captured, and compare the model with random ranking and change-size ranking. Report pooled and per-project results.
 
-The project focuses on **risk prediction, explainable prioritisation, and rigorous evaluation**. It does not replace human code review, testing, static analysis, or developer judgement.
+## Dataset decision
+- ApacheJIT remains the **primary dataset**.
+- Investigate records in `apachejit_total.csv` that are not in the supplied train/test files. Verify commit-ID overlap, dates, project coverage and labels before considering them for validation.
+- Qt/OpenStack is an optional external-evaluation candidate only if commit-level labels and sufficiently equivalent features are verified. Do not merge datasets blindly.
+- ReDef is not planned for implementation because its function-level data is not directly interchangeable with ApacheJIT commit-level records. It may be discussed in related work after source verification.
 
-## Core contribution
-The main practical experiment asks: if a developer can review only the top 10%, 20%, or 30% of commits ranked by CodePulse, what fraction of all buggy commits are captured? Compare this with random ranking and change-size ranking.
+## Technology
+- Frontend: React + Vite + JavaScript; Tailwind CSS; Recharts
+- Backend: FastAPI
+- ML: Python, pandas, NumPy, scikit-learn, joblib
 
-## Planned technology
-- **Frontend:** React + Vite, JavaScript, Tailwind CSS, shadcn/ui, and a charting library such as Recharts.
-- **Backend/API:** FastAPI (Python).
-- **ML:** pandas, NumPy, scikit-learn, and joblib.
-- **Development tools:** The team may use AI-assisted development tools of its choice. The application architecture must remain independent of any particular editor or AI tool.
-
-Technology choices may be adjusted by the team if a practical reason arises. Keep the frontend, API, and ML responsibilities separated.
-
-## Dataset
-Primary dataset: ApacheJIT, *A Large Dataset for Just-In-Time Defect Prediction*.
-- Target: `buggy` (`True` means the commit introduced a bug, according to the supplied dataset README).
-- Candidate metrics: `la`, `ld`, `nf`, `nd`, `ns`, `ent`, `ndev`, `age`, `nuc`, `aexp`, `arexp`, `asexp`.
-- Verify feature definitions and ranges against the paper before finalising the feature list.
-- `fix` is excluded from predictors pending verification of its exact meaning.
-- `apachejit_test_small.csv` is a subset of `apachejit_test_large.csv`; they are not independent test sets.
-- `apache/hadoop` has an unresolved zero-positive-label anomaly. Preserve raw data and document sensitivity analysis; do not silently alter labels.
-
-## Main application capabilities
-1. Overview dashboard with actual dataset and experiment results.
-2. Commit risk prediction using the saved preprocessing/model pipeline.
-3. Historical commit risk ranking.
-4. Review-budget comparison against baselines.
-5. Model performance comparison.
-6. Explainability and limitations.
-
-## Repository layout
+## Repository structure
 ```text
 CodePulse/
-├── app/                    # React frontend
-├── backend/                # FastAPI service
-├── src/                    # Shared data, ML and evaluation modules
-├── data/raw/               # Original datasets (not committed)
-├── data/processed/         # Generated processed data (not committed unless small/approved)
-├── models/                 # Saved model artefacts (manage size carefully)
-├── reports/                # Experiment outputs and model card
-├── notebooks/              # Exploration; reusable logic belongs in src/
-├── tests/
-├── docs/
-├── README.md
-└── requirements.txt
+  data/raw/       # unchanged source data; do not commit
+  data/processed/
+  notebooks/
+  src/
+  models/
+  app/
+  tests/
+  docs/
+  requirements.txt
 ```
 
-## Setup and execution
-Exact commands will be finalised once the team has created the frontend and backend package files. Keep separate documented commands for:
-- Python environment and dependencies.
-- FastAPI development server.
-- React development server.
-- Tests and model training.
+## Important rules
+- `buggy` is the target, never a predictor.
+- `commit_id` is an identifier, not a predictor.
+- Keep `project` for grouping and cross-project evaluation.
+- Keep `author_date` and `year` for temporal analysis/splitting; not default predictors.
+- Exclude `fix` from predictors unless its meaning and availability at prediction time are verified; current plan is to exclude it.
+- Fit preprocessing on training data only.
+- Keep validation separate from final test data.
+- Do not call an uncalibrated score a probability.
+- Preserve raw data and labels. Document exclusions rather than altering source data.
+- All final metrics and predictions must come from actual reproducible outputs.
+- Every PR author must understand and explain their own code.
 
-Do not invent or publish launch commands until they match the actual repository.
+## Schedule
+Nov 7: dataset decisions and app skeletons. Nov 8: API/report schemas. Nov 9–10: provisional model and early integration. Nov 11–12: model comparison, calibration and deployment decision. Nov 13–14: evaluation and report skeleton. Nov 15–16: full integration/testing. Nov 17: report/slides/fixes. Nov 18: code freeze/rehearsal. Nov 19: review/submission.
 
-## Scope boundaries
-Prioritise a reliable end-to-end application and defensible evaluation. External datasets, live GitHub scoring, label-noise experiments, authentication, and advanced features are optional and must not delay the core. Do not fabricate predictions, metrics, or charts. Clearly distinguish historical retrospective results from live predictions.
+
+## Documentation map
+- `docs/PROJECT_OVERVIEW.md` — aim, scope and success criteria
+- `docs/TECHNICAL_METHODOLOGY.md` — data, models and evaluation protocol
+- `docs/FEATURE_REQUIREMENTS.md` — application pages and API requirements
+- `docs/TEAM_RESPONSIBILITIES.md` — role ownership and hand-offs
+- `docs/TASK_TRACKER.md` — task IDs, milestones and Definition of Done
+- `docs/DECISIONS_NEEDED.md` — open decisions and evidence-based recommendations
+- `docs/DEVELOPMENT_GUIDELINES.md` — Git, testing and development rules
+- `docs/TERMINOLOGY_GLOSSARY.md` — beginner-friendly definitions
+- `reports/README.md` — expected reproducible output files
+
+## Freeze dates
+- Split freeze: **Nov 9, 2026**
+- Model freeze: **Nov 11, 2026**
+- Feature freeze: **Nov 14, 2026**
+- Code freeze: **Nov 18, 2026**
+- Review/submission: **Nov 19, 2026**
+
+The schedule is intentionally tight. Use provisional artefacts for early integration, but label them clearly and replace them before final evaluation.
