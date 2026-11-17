@@ -1,0 +1,32 @@
+{
+  "split_name": "chronological-test",
+  "split_type": "chronological",
+  "date_range": {
+    "start": "2018-01-01",
+    "end": "2018-12-31"
+  },
+  "total_commits": 8920,
+  "buggy_commits": 1941,
+  "model_version": "v1.0-20261117",
+  "train_end": "2016-09-30",
+  "val_start": "2017-01-01",
+  "val_end": "2017-09-30",
+  "test_start": "2018-01-01",
+  "note": "Gaps between periods reduce label latency leakage.",
+  "counts": {
+    "train": {
+      "commits": 74249,
+      "buggy": 21752
+    },
+    "val": {
+      "commits": 8311,
+      "buggy": 2213
+    },
+    "test": {
+      "commits": 8920,
+      "buggy": 1941
+    }
+  },
+  "excluded_from_main_run": [],
+  "project_note": "apache/hadoop-hdfs, apache/hadoop-mapreduce and apache/hadoop are merged into one project (see pipeline.py)."
+}

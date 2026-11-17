@@ -1,0 +1,13 @@
+feature,importance,method,model_version
+la,0.237473,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+nuc,0.031149,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+asexp,0.025168,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+age,0.020952,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+ld,0.019026,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+ndev,0.01653,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+nf,0.015411,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+ns,0.01266,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+arexp,0.012541,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+aexp,0.009392,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+ent,0.005654,permutation_importance (drop in validation PR-AUC),v1.0-20261117
+nd,0.000123,permutation_importance (drop in validation PR-AUC),v1.0-20261117
