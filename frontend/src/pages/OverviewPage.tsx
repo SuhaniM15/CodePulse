@@ -11,7 +11,6 @@ import type {
 import { AsyncView } from '@/components/AsyncView';
 import { DataTable } from '@/components/DataTable';
 import { EmptyState } from '@/components/EmptyState';
-import { Notice } from '@/components/Notice';
 import { PageHeader } from '@/components/PageHeader';
 import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { CaptureCurveChart } from '@/components/charts/CaptureCurveChart';
@@ -218,7 +217,6 @@ function EvaluationSection() {
             <StatCard label="Date range" value={formatDateRange(c.date_range)} compact />
             <StatCard label="Commits" value={formatInt(c.total_commits)} />
             <StatCard label="Buggy commits" value={formatInt(c.buggy_commits)} />
-            <StatCard label="Model version" value={c.model_version ?? 'Not available'} className="col-span-2" />
           </StatGrid>
         )}
       </AsyncView>
@@ -284,10 +282,7 @@ export function OverviewPage() {
       />
 
       <div className="mb-6 flex flex-col gap-3">
-        <Notice variant="retrospective">
-          Every result here is a retrospective replay of historical commits with known outcomes. It is not live analysis,
-          and CodePulse does not read live GitHub commits.
-        </Notice>
+        
         <ProvisionalNotice status={status} subject="The CodePulse results on this page" />
       </div>
 

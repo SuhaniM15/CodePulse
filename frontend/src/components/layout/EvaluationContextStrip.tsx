@@ -70,7 +70,6 @@ export function EvaluationContextStrip() {
           </Field>
           <Field label="Commits">{numberFormat.format(ctx.total_commits)}</Field>
           <Field label="Buggy commits">{numberFormat.format(ctx.buggy_commits)}</Field>
-          <Field label="Model version">{ctx.model_version ?? 'Not available'}</Field>
         </dl>
         {health.state.status === 'success' ? (
           <ProvisionalNotice

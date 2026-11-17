@@ -11,7 +11,6 @@ import type {
 } from '@/api/types';
 import { AsyncView } from '@/components/AsyncView';
 import { DataTable, type DataTableColumn, type DataTableSort } from '@/components/DataTable';
-import { Notice } from '@/components/Notice';
 import { PageHeader } from '@/components/PageHeader';
 import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { RiskChip } from '@/components/RiskChip';
@@ -105,10 +104,6 @@ export function CommitRankingPage() {
       />
 
       <div className="mb-6 flex flex-col gap-3">
-        <Notice variant="retrospective">
-          This is a ranking of historical commits whose outcomes are already known. It is not live GitHub analysis:
-          CodePulse does not read live commits, and these rows are not predictions about new work.
-        </Notice>
         <ProvisionalNotice
           status={health.state.status === 'success' ? health.state.data.model_status : null}
           subject="The risk scores on this page"

@@ -1,0 +1,153 @@
+{
+  "total_commits": 106674,
+  "buggy_commits": 28239,
+  "buggy_rate": 0.26472242533325835,
+  "projects": [
+    "apache/activemq",
+    "apache/camel",
+    "apache/cassandra",
+    "apache/flink",
+    "apache/groovy",
+    "apache/hadoop",
+    "apache/hbase",
+    "apache/hive",
+    "apache/ignite",
+    "apache/kafka",
+    "apache/spark",
+    "apache/zeppelin",
+    "apache/zookeeper"
+  ],
+  "per_project": {
+    "apache/activemq": {
+      "commits": 6126,
+      "buggy": 1404
+    },
+    "apache/camel": {
+      "commits": 22700,
+      "buggy": 3078
+    },
+    "apache/cassandra": {
+      "commits": 8159,
+      "buggy": 3117
+    },
+    "apache/flink": {
+      "commits": 11691,
+      "buggy": 2811
+    },
+    "apache/groovy": {
+      "commits": 8059,
+      "buggy": 1614
+    },
+    "apache/hadoop": {
+      "commits": 16192,
+      "buggy": 3060
+    },
+    "apache/hbase": {
+      "commits": 8730,
+      "buggy": 3782
+    },
+    "apache/hive": {
+      "commits": 6842,
+      "buggy": 4223
+    },
+    "apache/ignite": {
+      "commits": 12036,
+      "buggy": 2439
+    },
+    "apache/kafka": {
+      "commits": 2384,
+      "buggy": 1115
+    },
+    "apache/spark": {
+      "commits": 1465,
+      "buggy": 632
+    },
+    "apache/zeppelin": {
+      "commits": 1451,
+      "buggy": 622
+    },
+    "apache/zookeeper": {
+      "commits": 839,
+      "buggy": 342
+    }
+  },
+  "date_range": {
+    "start": "2003-09-11",
+    "end": "2019-12-26"
+  },
+  "project_note": "apache/hadoop-hdfs, apache/hadoop-mapreduce and apache/hadoop are merged into one project; together they match the ApacheJIT paper's HDFS + MapReduce totals.",
+  "feature_ranges": {
+    "la": {
+      "min": 0.0,
+      "median": 37.0,
+      "p95": 816.0,
+      "max": 9967.0
+    },
+    "ld": {
+      "min": 0.0,
+      "median": 9.0,
+      "p95": 313.0,
+      "max": 9950.0
+    },
+    "nf": {
+      "min": 1.0,
+      "median": 3.0,
+      "p95": 24.0,
+      "max": 100.0
+    },
+    "nd": {
+      "min": 1.0,
+      "median": 2.0,
+      "p95": 9.0,
+      "max": 89.0
+    },
+    "ns": {
+      "min": 1.0,
+      "median": 1.0,
+      "p95": 3.0,
+      "max": 45.0
+    },
+    "ent": {
+      "min": 0.0,
+      "median": 1.0,
+      "p95": 3.712,
+      "max": 6.57
+    },
+    "ndev": {
+      "min": 0.0,
+      "median": 2.333,
+      "p95": 19.571,
+      "max": 167.5
+    },
+    "age": {
+      "min": 0.0,
+      "median": 13.818,
+      "p95": 275.779,
+      "max": 2713.057
+    },
+    "nuc": {
+      "min": 0.0,
+      "median": 15.0,
+      "p95": 479.837,
+      "max": 3704.5
+    },
+    "aexp": {
+      "min": 0.0,
+      "median": 222.0,
+      "p95": 7599.35,
+      "max": 15795.0
+    },
+    "arexp": {
+      "min": 0.0,
+      "median": 180.333,
+      "p95": 3294.288,
+      "max": 4841.25
+    },
+    "asexp": {
+      "min": 0.0,
+      "median": 36.0,
+      "p95": 2384.0,
+      "max": 7842.0
+    }
+  }
+}

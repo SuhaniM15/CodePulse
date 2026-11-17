@@ -2,7 +2,6 @@ import type { ModelMetricsEntry, ModelMetricsResponse } from '@/api/types';
 import { AsyncView } from '@/components/AsyncView';
 import { DataTable, type DataTableColumn } from '@/components/DataTable';
 import { FieldList } from '@/components/FieldList';
-import { Notice } from '@/components/Notice';
 import { PageHeader } from '@/components/PageHeader';
 import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { useApi } from '@/hooks/useApi';
@@ -146,10 +145,7 @@ export function ModelsPage() {
         description="Comparison of the evaluated models on the evaluation split."
       />
       <div className="mb-6">
-        <Notice variant="retrospective">
-          These metrics describe how each model performed on historical commits whose outcomes are known. They are not
-          measurements of live use.
-        </Notice>
+        
       </div>
       <AsyncView
         state={state}

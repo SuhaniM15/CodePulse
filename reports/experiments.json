@@ -1,0 +1,150 @@
+{
+  "model": "gradient_boosting",
+  "note": "PR-AUC and capture depend on the base rate, so compare ROC-AUC and the lift columns across experiments, not raw PR-AUC. None of these experiments affect model selection.",
+  "chronological_main": {
+    "roc_auc": 0.7942304133272712,
+    "pr_auc": 0.5238100920602478,
+    "pr_auc_lift_over_base_rate": 2.407,
+    "capture_at_20pct": 0.4714,
+    "capture_lift_over_random": 2.357,
+    "test_buggy_rate": 0.2176,
+    "test_size": 8920
+  },
+  "random_split_same_sizes": {
+    "roc_auc": 0.8133601832674003,
+    "pr_auc": 0.6538708584205413,
+    "pr_auc_lift_over_base_rate": 2.332,
+    "capture_at_20pct": 0.477,
+    "capture_lift_over_random": 2.385,
+    "test_buggy_rate": 0.2804,
+    "test_size": 8920
+  },
+  "chronological_test_through_2019": {
+    "roc_auc": 0.8051515206957955,
+    "pr_auc": 0.4200257419675723,
+    "pr_auc_lift_over_base_rate": 2.725,
+    "capture_at_20pct": 0.5227,
+    "capture_lift_over_random": 2.613,
+    "test_buggy_rate": 0.1541,
+    "test_size": 19317
+  },
+  "buggy_rate_by_year_in_test_window": {
+    "2018": 0.2176,
+    "2019": 0.0996
+  },
+  "hadoop_family_excluded": {
+    "roc_auc": 0.8326410175700256,
+    "pr_auc": 0.6578874903088148,
+    "pr_auc_lift_over_base_rate": 2.437,
+    "capture_at_20pct": 0.4901,
+    "capture_lift_over_random": 2.451,
+    "test_buggy_rate": 0.2699,
+    "test_size": 6931
+  },
+  "leave_one_project_out": {
+    "apache/activemq": {
+      "roc_auc": 0.7911,
+      "pr_auc_lift_over_base_rate": 2.427,
+      "base_rate": 0.2292,
+      "capture_at_20pct": 0.4815,
+      "capture_lift_over_random": 2.407,
+      "max_possible_capture_at_20pct": 0.8726
+    },
+    "apache/camel": {
+      "roc_auc": 0.7276,
+      "pr_auc_lift_over_base_rate": 2.271,
+      "base_rate": 0.1356,
+      "capture_at_20pct": 0.4396,
+      "capture_lift_over_random": 2.198,
+      "max_possible_capture_at_20pct": 1.0
+    },
+    "apache/cassandra": {
+      "roc_auc": 0.8142,
+      "pr_auc_lift_over_base_rate": 1.9,
+      "base_rate": 0.382,
+      "capture_at_20pct": 0.4081,
+      "capture_lift_over_random": 2.04,
+      "max_possible_capture_at_20pct": 0.5235
+    },
+    "apache/flink": {
+      "roc_auc": 0.8046,
+      "pr_auc_lift_over_base_rate": 2.323,
+      "base_rate": 0.2404,
+      "capture_at_20pct": 0.4824,
+      "capture_lift_over_random": 2.412,
+      "max_possible_capture_at_20pct": 0.8318
+    },
+    "apache/groovy": {
+      "roc_auc": 0.7558,
+      "pr_auc_lift_over_base_rate": 2.185,
+      "base_rate": 0.2003,
+      "capture_at_20pct": 0.4535,
+      "capture_lift_over_random": 2.268,
+      "max_possible_capture_at_20pct": 0.9986
+    },
+    "apache/hadoop": {
+      "roc_auc": 0.7333,
+      "pr_auc_lift_over_base_rate": 1.88,
+      "base_rate": 0.189,
+      "capture_at_20pct": 0.4085,
+      "capture_lift_over_random": 2.042,
+      "max_possible_capture_at_20pct": 1.0
+    },
+    "apache/hbase": {
+      "roc_auc": 0.7573,
+      "pr_auc_lift_over_base_rate": 1.571,
+      "base_rate": 0.4332,
+      "capture_at_20pct": 0.3297,
+      "capture_lift_over_random": 1.649,
+      "max_possible_capture_at_20pct": 0.4617
+    },
+    "apache/hive": {
+      "roc_auc": 0.8056,
+      "pr_auc_lift_over_base_rate": 1.392,
+      "base_rate": 0.6172,
+      "capture_at_20pct": 0.2962,
+      "capture_lift_over_random": 1.481,
+      "max_possible_capture_at_20pct": 0.324
+    },
+    "apache/ignite": {
+      "roc_auc": 0.8411,
+      "pr_auc_lift_over_base_rate": 2.902,
+      "base_rate": 0.2026,
+      "capture_at_20pct": 0.5597,
+      "capture_lift_over_random": 2.798,
+      "max_possible_capture_at_20pct": 0.987
+    },
+    "apache/kafka": {
+      "roc_auc": 0.8152,
+      "pr_auc_lift_over_base_rate": 1.671,
+      "base_rate": 0.4677,
+      "capture_at_20pct": 0.3641,
+      "capture_lift_over_random": 1.821,
+      "max_possible_capture_at_20pct": 0.4276
+    },
+    "apache/spark": {
+      "roc_auc": 0.809,
+      "pr_auc_lift_over_base_rate": 1.714,
+      "base_rate": 0.4314,
+      "capture_at_20pct": 0.3671,
+      "capture_lift_over_random": 1.835,
+      "max_possible_capture_at_20pct": 0.4636
+    },
+    "apache/zeppelin": {
+      "roc_auc": 0.789,
+      "pr_auc_lift_over_base_rate": 1.704,
+      "base_rate": 0.4287,
+      "capture_at_20pct": 0.365,
+      "capture_lift_over_random": 1.825,
+      "max_possible_capture_at_20pct": 0.4666
+    },
+    "apache/zookeeper": {
+      "roc_auc": 0.8162,
+      "pr_auc_lift_over_base_rate": 1.768,
+      "base_rate": 0.4076,
+      "capture_at_20pct": 0.383,
+      "capture_lift_over_random": 1.915,
+      "max_possible_capture_at_20pct": 0.4906
+    }
+  }
+}

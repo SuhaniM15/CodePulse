@@ -5,7 +5,6 @@ import { AsyncView } from '@/components/AsyncView';
 import { DataTable, type DataTableColumn } from '@/components/DataTable';
 import { EmptyState } from '@/components/EmptyState';
 import { FieldList } from '@/components/FieldList';
-import { Notice } from '@/components/Notice';
 import { PageHeader } from '@/components/PageHeader';
 import { ProvisionalNotice } from '@/components/ProvisionalNotice';
 import { SegmentedControl } from '@/components/SegmentedControl';
@@ -169,10 +168,7 @@ export function ReviewBudgetPage() {
       />
 
       <div className="mb-6 flex flex-col gap-3">
-        <Notice variant="retrospective">
-          These are retrospective results: a replay of historical commits whose outcomes are already known. They are not
-          live predictions, and CodePulse does not analyse live GitHub commits.
-        </Notice>
+        
         <ProvisionalNotice status={health.state.status === 'success' ? health.state.data.model_status : null} subject="The CodePulse results on this page" />
       </div>
 

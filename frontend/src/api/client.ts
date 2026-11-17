@@ -69,14 +69,28 @@ export function buildApiError(status: number, body: unknown): ApiError {
   if (isRecord(body)) {
     const { error_code, message, detail } = body;
 
-    if (typeof message === 'string' && message !== '') {
-      return {
-        error_code: typeof error_code === 'string' ? error_code : `HTTP_${status}`,
-        message,
-        detail: typeof detail === 'string' ? detail : undefined,
-        status,
-      };
-    }
+    
+if (typeof message === 'string' && message !== '') {
+  const field_errors = Array.isArray(body.field_errors)
+    ? parseValidationList(
+        body.field_errors.map((e) => {
+          if (!isRecord(e)) return e;
+          return {
+            loc: [e.field],
+            msg: e.message,
+          };
+        }),
+      )
+    : undefined;
+
+  return {
+    error_code: typeof error_code === 'string' ? error_code : `HTTP_${status}`,
+    message,
+    detail: typeof detail === 'string' ? detail : undefined,
+    field_errors,
+    status,
+  };
+}
 
     if (typeof detail === 'string' && detail !== '') {
       return {

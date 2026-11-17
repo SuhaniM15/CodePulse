@@ -14,7 +14,6 @@ import {
 import { useFixturesInUse } from '@/hooks/fixtureRegistry';
 
 import { Brand } from './Brand';
-import { DataSourceNote } from './DataSourceNote';
 import { EvaluationContextStrip } from './EvaluationContextStrip';
 import { SidebarNav } from './SidebarNav';
 
@@ -43,7 +42,7 @@ export function AppLayout() {
         <Brand />
         <SidebarNav />
         <div className="mt-auto">
-          <DataSourceNote />
+      
         </div>
       </aside>
 
@@ -65,7 +64,7 @@ export function AppLayout() {
               </SheetDescription>
               <Brand />
               <SidebarNav onNavigate={() => setMenuOpen(false)} />
-              <DataSourceNote />
+              
             </SheetContent>
           </Sheet>
         </header>
